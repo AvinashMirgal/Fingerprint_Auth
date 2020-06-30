@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+var template;
+function CallFingerAPI()
+{
+  var url = "http://localhost:8080/CallMorphoAPI";
+  var xmlhttp;
+  if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+
+     xmlhttp=new XMLHttpRequest();
+  
+  }
+  else
+  {// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+  }
+     xmlhttp.onreadystatechange=function()
+  {
+     if (xmlhttp.readyState==4 && xmlhttp.status==200)
+     {
+	   fpobject = JSON.parse(xmlhttp.responseText);
+	   alert("Device Status: "+fpobject.ReturnCode);
+	   alert("Base64ISOTemplate: "+fpobject.Base64ISOTemplate);
+	   alert("Base64RAWIMage: "+fpobject.Base64RAWIMage);
+	   alert("Base64BMPIMage: "+fpobject.Base64BMPIMage);
+	   alert("NFIQ: "+fpobject.NFIQ);
+       template = fpobject.Base64ISOTemplate; 	   
+     }
+  }
+  
+  var timeout = 5;
+  xmlhttp.open("POST",url+"?"+timeout,true);
+  xmlhttp.send();
+
+}
+
+
+function CompareTemplates()
+{
+  var url = "http://localhost:8080/CompareTemplates";
+  var xmlhttp;
+  if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+
+     xmlhttp=new XMLHttpRequest();
+  
+  }
+  else
+  {// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+  }
+     xmlhttp.onreadystatechange=function()
+  {
+     if (xmlhttp.readyState==4 && xmlhttp.status==200)
+     {
+		fpobject = JSON.parse(xmlhttp.responseText);
+	    alert("CompareTemplate return code: "+fpobject.ReturnCode);
+		alert("Matching Result: "+fpobject.MatchingResult);
+     }
+  }
+  
+  var templatesArray = [1];
+  templatesArray[0] = template;  
+  alert("templatearray1: "+ templatesArray[0]);
+  var numberOfTemplates = 1;
+  xmlhttp.open("POST",url+"?"+templatesArray+"$"+template+"$"+numberOfTemplates,true);
+  xmlhttp.send();
+  
+}
+
+
+function getDeviceDetails()
+{
+  var url = "http://localhost:8080/getDeviceDetails";
+  var xmlhttp;
+  if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+
+     xmlhttp=new XMLHttpRequest();
+  
+  }
+  else
+  {// code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+  }
+     xmlhttp.onreadystatechange=function()
+  {
+     if (xmlhttp.readyState==4 && xmlhttp.status==200)
+     {
+		fpobject = JSON.parse(xmlhttp.responseText);
+	    alert("Device Make: "+fpobject.DeviceMake);
+	    alert("Device Model: "+fpobject.DeviceModel);
+	    alert("Device Serial: "+fpobject.DeviceSerial);
+     }
+  }
+  
+  xmlhttp.open("POST",url,true);
+  xmlhttp.send();
+ 
+  
+}
+
+</script>
+</head>
+<body>
+
+<h2>MorphoUtility</h2>
+<button type="button" onclick="CallFingerAPI()">CaptureFinger</button>
+<button type="button" onclick="getDeviceDetails()">getDeviceDetails</button>
+<button type="button" onclick="CompareTemplates()">CompareTemplates</button>
+
+ 
+</body>
+</html>
